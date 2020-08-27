@@ -35,6 +35,24 @@ describe("Tests basiques", () => {
         expect(html).toContain("powered by Polr 2");
     }, timeout);
 
+    // test connexion admin
+    test('home and connexion', async () => {
+        await page.goto('http://polr.stationmyr.net');
+        await page.waitForSelector('#navbar li a');
+        // click sur le lien "Sign In" de la navigation
+        await page.evaluate( () => {
+            Array
+                .from( document.querySelectorAll( '#navbar li a' ) )
+                .filter( el => el.textContent === 'Sign Up' )[0].click();
+        });
+        // on attent que l'élément ".dropdown" soit chargé
+        await page.waitForSelector('.dropdown');
+        // on récupère le code HTML
+        const html = await page.$eval('.dropdown-menu', e => e.innerHTML);
+        // on vérifie qu'il contient la bonne chaîne de caractères
+        expect(html).toContain("Login");
+        await page.screenshot({path: './tests/img/signin.png'});
+    }, timeout);
 
     // cette fonction est lancée avant chaque test de cette
     // série de tests
